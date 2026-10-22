@@ -1,0 +1,5 @@
+if(NOT EXISTS "${AMW_CONFIG_DEST}")
+  get_filename_component(_directory "${AMW_CONFIG_DEST}" DIRECTORY)
+  file(MAKE_DIRECTORY "${_directory}")
+  configure_file("${AMW_CONFIG_SOURCE}" "${AMW_CONFIG_DEST}" COPYONLY)
+endif()

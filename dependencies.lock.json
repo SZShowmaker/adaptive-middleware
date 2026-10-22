@@ -1,0 +1,9 @@
+{
+  "format_version": 1,
+  "fastdds": "3.6.2.0",
+  "fastcdr": "2.3.6",
+  "fastdds_gen": "4.3.0",
+  "reference_build_kit_revision": "5d2d24cf6b2105a5691f44f279b15150f77146f3",
+  "binding": "fastdds",
+  "ap_design_reference": "R25-11"
+}

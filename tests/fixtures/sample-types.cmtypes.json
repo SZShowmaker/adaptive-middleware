@@ -1,0 +1,383 @@
+{
+  "format_version": 1,
+  "types": [
+    {
+      "id": "sample.Item",
+      "version": "1.0.0",
+      "kind": "struct",
+      "fields": [
+        {
+          "id": 1,
+          "name": "sample_id",
+          "type": "uint32",
+          "description": "样本编号"
+        },
+        {
+          "id": 2,
+          "name": "value",
+          "type": "float32",
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "id": "sample.Batch",
+      "version": "1.0.0",
+      "kind": "struct",
+      "fields": [
+        {
+          "id": 1,
+          "name": "items",
+          "type": {
+            "kind": "array",
+            "length": 4,
+            "element": {
+              "ref": "sample.Item",
+              "version": "1.0.0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "sample.Message",
+      "version": "1.0.0",
+      "kind": "struct",
+      "fields": [
+        {
+          "id": 1,
+          "name": "batch",
+          "type": {
+            "ref": "sample.Batch",
+            "version": "1.0.0"
+          }
+        },
+        {
+          "id": 2,
+          "name": "timestamp",
+          "type": "uint64"
+        }
+      ],
+      "description": "通用采集消息，用于回归验证"
+    },
+    {
+      "id": "sample.Archive",
+      "version": "1.0.0",
+      "kind": "struct",
+      "fields": [
+        {
+          "id": 1,
+          "name": "entry",
+          "type": {
+            "ref": "sample.Message",
+            "version": "1.0.0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sample.Snapshot",
+      "version": "1.0.0",
+      "kind": "struct",
+      "fields": [
+        {
+          "id": 1,
+          "name": "payload",
+          "type": {
+            "ref": "sample.Message",
+            "version": "1.0.0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sample.Metric0",
+      "version": "1.0.0",
+      "kind": "struct",
+      "fields": [
+        {
+          "id": 1,
+          "name": "reading",
+          "type": "float64"
+        },
+        {
+          "id": 2,
+          "name": "enabled",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "id": "sample.Metric1",
+      "version": "1.0.0",
+      "kind": "struct",
+      "fields": [
+        {
+          "id": 1,
+          "name": "reading",
+          "type": "float64"
+        },
+        {
+          "id": 2,
+          "name": "enabled",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "id": "sample.Metric2",
+      "version": "1.0.0",
+      "kind": "struct",
+      "fields": [
+        {
+          "id": 1,
+          "name": "reading",
+          "type": "float64"
+        },
+        {
+          "id": 2,
+          "name": "enabled",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "id": "sample.Metric3",
+      "version": "1.0.0",
+      "kind": "struct",
+      "fields": [
+        {
+          "id": 1,
+          "name": "reading",
+          "type": "float64"
+        },
+        {
+          "id": 2,
+          "name": "enabled",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "id": "sample.Metric4",
+      "version": "1.0.0",
+      "kind": "struct",
+      "fields": [
+        {
+          "id": 1,
+          "name": "reading",
+          "type": "float64"
+        },
+        {
+          "id": 2,
+          "name": "enabled",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "id": "sample.Metric5",
+      "version": "1.0.0",
+      "kind": "struct",
+      "fields": [
+        {
+          "id": 1,
+          "name": "reading",
+          "type": "float64"
+        },
+        {
+          "id": 2,
+          "name": "enabled",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "id": "sample.Metric6",
+      "version": "1.0.0",
+      "kind": "struct",
+      "fields": [
+        {
+          "id": 1,
+          "name": "reading",
+          "type": "float64"
+        },
+        {
+          "id": 2,
+          "name": "enabled",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "id": "sample.Metric7",
+      "version": "1.0.0",
+      "kind": "struct",
+      "fields": [
+        {
+          "id": 1,
+          "name": "reading",
+          "type": "float64"
+        },
+        {
+          "id": 2,
+          "name": "enabled",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "id": "sample.Metric8",
+      "version": "1.0.0",
+      "kind": "struct",
+      "fields": [
+        {
+          "id": 1,
+          "name": "reading",
+          "type": "float64"
+        },
+        {
+          "id": 2,
+          "name": "enabled",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "id": "sample.Metric9",
+      "version": "1.0.0",
+      "kind": "struct",
+      "fields": [
+        {
+          "id": 1,
+          "name": "reading",
+          "type": "float64"
+        },
+        {
+          "id": 2,
+          "name": "enabled",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "id": "sample.Metric10",
+      "version": "1.0.0",
+      "kind": "struct",
+      "fields": [
+        {
+          "id": 1,
+          "name": "reading",
+          "type": "float64"
+        },
+        {
+          "id": 2,
+          "name": "enabled",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "id": "sample.Metric11",
+      "version": "1.0.0",
+      "kind": "struct",
+      "fields": [
+        {
+          "id": 1,
+          "name": "reading",
+          "type": "float64"
+        },
+        {
+          "id": 2,
+          "name": "enabled",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "id": "sample.Metric12",
+      "version": "1.0.0",
+      "kind": "struct",
+      "fields": [
+        {
+          "id": 1,
+          "name": "reading",
+          "type": "float64"
+        },
+        {
+          "id": 2,
+          "name": "enabled",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "id": "sample.Metric13",
+      "version": "1.0.0",
+      "kind": "struct",
+      "fields": [
+        {
+          "id": 1,
+          "name": "reading",
+          "type": "float64"
+        },
+        {
+          "id": 2,
+          "name": "enabled",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "id": "sample.Metric14",
+      "version": "1.0.0",
+      "kind": "struct",
+      "fields": [
+        {
+          "id": 1,
+          "name": "reading",
+          "type": "float64"
+        },
+        {
+          "id": 2,
+          "name": "enabled",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "id": "sample.Metric15",
+      "version": "1.0.0",
+      "kind": "struct",
+      "fields": [
+        {
+          "id": 1,
+          "name": "reading",
+          "type": "float64"
+        },
+        {
+          "id": 2,
+          "name": "enabled",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "id": "sample.Metric16",
+      "version": "1.0.0",
+      "kind": "struct",
+      "fields": [
+        {
+          "id": 1,
+          "name": "reading",
+          "type": "float64"
+        },
+        {
+          "id": 2,
+          "name": "enabled",
+          "type": "bool"
+        }
+      ]
+    }
+  ]
+}

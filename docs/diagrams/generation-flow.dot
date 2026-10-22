@@ -1,0 +1,47 @@
+digraph Generation {
+  graph [newrank=true, rankdir=TB, bgcolor="#F8FAFC", pad=0.35, nodesep=0.32, ranksep=0.46,
+         fontname="Noto Sans CJK SC", fontsize=22, fontcolor="#0F172A",
+         label="从配置到可运行程序\n", labelloc=t, splines=polyline];
+  node [shape=box, style="rounded,filled", fillcolor="white", color="#CBD5E1",
+        fontname="Noto Sans CJK SC", fontsize=12, fontcolor="#0F172A", margin="0.20,0.13", penwidth=1.2];
+  edge [color="#64748B", penwidth=1.4, arrowsize=0.75,
+        fontname="Noto Sans CJK SC", fontsize=10, fontcolor="#475569"];
+
+  subgraph cluster_inputs {
+    label="①  工程师定义通信需求"; fontsize=15; color="#BFDBFE"; style="rounded,filled"; fillcolor="#EFF6FF";
+    types [label="类型 JSON\n*.cmtypes.json\n字段、类型、数组 / 列表", fillcolor="#DBEAFE", color="#60A5FA"];
+    project [label="逻辑工程\nproject.cm.json\nApp、服务、输出、订阅关系", fillcolor="#DBEAFE", color="#60A5FA"];
+    deploy [label="部署 JSON\ndeployment.json\n实例、来源、网络、队列 / QoS", fillcolor="#DBEAFE", color="#60A5FA"];
+    {rank=same; types; project; deploy;}
+    types -> project -> deploy [style=invis];
+  }
+  editor [label="②  配置界面 GUI  /  命令行 CLI\n共用模型校验与生成逻辑", fillcolor="#CCFBF1", color="#14B8A6", fontsize=14];
+  types -> editor; project -> editor; deploy -> editor;
+
+  subgraph cluster_generate {
+    label=""; fontsize=15; color="#99F6E4"; style="rounded,filled"; fillcolor="#F0FDFA";
+    split [shape=plaintext, fillcolor="#F0FDFA", fontsize=15, label="③  生成两部分代码，组成同一份契约包"];
+    split -> idl; split -> api;
+    idl [label="生成 IDL\nmetadata/messages.idl"];
+    gen [label="官方 Fast DDS-Gen 4.3.0\n开发机运行 JAR，使用 JDK 17", fillcolor="#FEF3C7", color="#FBBF24"];
+    wire [label="DDS 通信代码\ngenerated/wire/*\nDDS 类型、序列化、TypeSupport"];
+    api [label="生成业务类型与 App 接口\ngenerated/types.hpp\ngenerated/apps.hpp + apps.cpp\n包含类型转换、路由和策略", fillcolor="#CCFBF1", color="#14B8A6"];
+    {rank=same; gen; api;}
+    idl -> gen -> wire;
+  }
+    package [label="单目录交付  out/delivery/<工程>/src-gen/\n生成接口 + CM / 日志 / 时间源码 + 三平台 SDK\nCMake / 配置 / 手册 / 清单\n由工具维护；业务代码另放", fillcolor="#CCFBF1", color="#14B8A6", fontsize=13];
+    wire -> package; api -> package;
+  editor -> split;
+
+  code [label="手写业务逻辑\n包含 apps.hpp / 日志 / 时间 API\n统一链接 amw::app", fillcolor="#DBEAFE", color="#60A5FA"];
+  sdk [label="fastdds-build-kit 提供\n目标平台 SDK\n头文件、库、CMake 配置", fillcolor="#FEF3C7", color="#FBBF24"];
+  {rank=same; code; package; sdk;}
+  code -> package [style=invis];
+  build [label="④  CMake + 目标平台编译器\n编译并链接业务、生成代码、CM、绑定和 SDK", fillcolor="#E0E7FF", color="#818CF8", fontsize=14];
+  code -> build; package -> build; sdk -> package [label="随包收集"];
+  output [label="⑤  交付并运行应用\nLinux x64  /  AArch64 Linux  /  Windows x64\n可执行程序 + 所需运行库", fillcolor="#312E81", color="#312E81", fontcolor="white", fontsize=14];
+  build -> output;
+  note [shape=plaintext, fillcolor="#F8FAFC", fontsize=11, fontcolor="#475569",
+        label="蓝色：手工维护   ·   青色：配置 / 生成   ·   黄色：外部工具 / 依赖   ·   紫色：编译 / 交付\nGen 也由 build-kit 提供；生成得到 C++ 源码，编译后才有库和程序。\n修改消息、连接或部署 → 重新校验、生成、编译；运行时不需要 GUI / Python / Java。"];
+  output -> note [style=invis];
+}

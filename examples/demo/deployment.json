@@ -1,0 +1,77 @@
+{
+  "format_version": 1,
+  "binding": "fastdds",
+  "transport": {
+    "domain": 37,
+    "shared_memory": false,
+    "interface_address": "",
+    "peers": []
+  },
+  "policies": {
+    "state": {
+      "queue_samples": 16,
+      "queue_bytes": 4194304,
+      "overflow": "discard_oldest",
+      "reliability": "best_effort",
+      "durability": "volatile",
+      "history_depth": 16,
+      "max_blocking_ms": 20
+    }
+  },
+  "instances": [
+    {
+      "id": "camera_front",
+      "app": "producer",
+      "provides": {
+        "perception": "front"
+      },
+      "requires": {},
+      "policy": "state"
+    },
+    {
+      "id": "camera_rear",
+      "app": "producer",
+      "provides": {
+        "perception": "rear"
+      },
+      "requires": {},
+      "policy": "state"
+    },
+    {
+      "id": "monitor",
+      "app": "consumer",
+      "provides": {},
+      "requires": {
+        "perception": {
+          "instance": "camera_front",
+          "provided": "perception"
+        }
+      },
+      "policy": "state"
+    },
+    {
+      "id": "recorder",
+      "app": "consumer",
+      "provides": {},
+      "requires": {
+        "perception": {
+          "instance": "camera_front",
+          "provided": "perception"
+        }
+      },
+      "policy": "state"
+    },
+    {
+      "id": "rear_monitor",
+      "app": "consumer",
+      "provides": {},
+      "requires": {
+        "perception": {
+          "instance": "camera_rear",
+          "provided": "perception"
+        }
+      },
+      "policy": "state"
+    }
+  ]
+}

@@ -1,0 +1,327 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Adaptive Middleware · 配置工作台</title>
+<style>
+:root{font:14px system-ui;color:#dbe5f4;background:#111827}*{box-sizing:border-box}body{margin:0}header{padding:20px 28px;border-bottom:1px solid #334155;display:flex;justify-content:space-between;gap:16px;align-items:center}h1{font-size:21px;margin:0}h2{font-size:16px;margin:12px 0}small,.muted{color:#94a3b8}button,select,input{background:#1e293b;color:#e2e8f0;border:1px solid #475569;border-radius:6px;padding:8px;margin:3px;max-width:100%}button{cursor:pointer}button:hover{background:#334155}button.primary{background:#2563eb;border-color:#2563eb}button:disabled{opacity:.5;cursor:wait}main{display:grid;grid-template-columns:270px 1fr 330px;gap:16px;padding:20px}section{min-width:0}.panel,.app{background:#182235;border:1px solid #334155;border-radius:10px;padding:16px;margin-bottom:14px}.app header{padding:0 0 8px;border:0}.port{padding:8px;background:#0f172a;border-left:3px solid #38bdf8;margin:6px 0;overflow-wrap:anywhere}.input{border-color:#a78bfa}.tag{color:#67e8f9;font-size:12px}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:12px ui-monospace,monospace}textarea{width:100%;min-height:350px;background:#0f172a;color:#dbeafe;border:1px solid #475569;padding:12px;tab-size:2;font:13px monospace}details{margin:8px 0}summary{cursor:pointer}.row{display:flex;flex-wrap:wrap;align-items:center;gap:5px}label{display:block;margin-top:10px}footer{padding:10px 28px;color:#94a3b8}.error{color:#fca5a5}dialog{background:#182235;color:#dbe5f4;border:1px solid #475569;border-radius:12px;width:min(900px,90vw)}dialog::backdrop{background:#0009}a{color:#7dd3fc}@media(max-width:1100px){main{grid-template-columns:240px 1fr}#right{grid-column:1/-1}}@media(max-width:700px){main{display:block}header{display:block}}
+
+.flow-section{grid-column:1/-1}.project-bar{position:sticky;top:0;z-index:10;background:#142239;border-bottom:1px solid #36516f;padding:12px 28px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}.project-label{font-size:12px;color:#93b5d6}.project-name{font-size:20px;color:#f8fafc;overflow-wrap:anywhere;min-width:0}.unsaved,.saved{font-size:12px;padding:4px 9px;border-radius:20px}.unsaved{color:#fde68a;background:#493d1b}.saved{color:#99f6e4;background:#163e3a}#projectStats{margin-left:auto;color:#94a3b8;font-size:12px}.flow-toolbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}.flow-canvas{overflow:auto;max-height:560px;min-height:150px;background:#0c1526;border:1px solid #30425b;border-radius:8px;margin-top:12px;overscroll-behavior:contain}.flow-canvas svg{display:block;max-width:none}.flow-empty{padding:28px}.flow-detail{padding:12px 2px 0;overflow-wrap:anywhere}.flow-detail p{margin:8px 0}.edge-line{fill:none;stroke:#60a5fa;stroke-width:2}.edge-hit{fill:none;stroke:transparent;stroke-width:16;cursor:pointer}.flow-edge{cursor:pointer;outline:none}.flow-edge.selected .edge-line,.flow-edge:hover .edge-line,.flow-edge:focus .edge-line{stroke:#fbbf24;stroke-width:3}.flow-node rect{fill:#1b2b43;stroke:#4b6381;stroke-width:1.4}.flow-node.highlighted rect{stroke:#fbbf24;stroke-width:2}.flow-node text{fill:#e2e8f0;font-size:13px}.flow-node .node-title{font-size:16px;font-weight:600}.flow-node .node-count{fill:#94a3b8;font-size:11px}.flow-node .input-label{fill:#c4b5fd}.flow-node .output-label{fill:#7dd3fc}.input-dot{fill:#a78bfa}.output-dot{fill:#38bdf8}.edge-badge{cursor:pointer}.edge-badge rect{fill:#203d66;stroke:#60a5fa}.edge-badge text{fill:#dbeafe;font-size:11px}.edge-badge.selected rect{fill:#614715;stroke:#fbbf24}#flowZoomLabel{font-size:12px;min-width:38px;text-align:center}
+.type-field{border:1px solid #475569;border-radius:8px;padding:10px;margin:12px 0}.descriptor-editor{border-left:2px solid #475569;padding-left:10px;margin:8px 0}.type-field input{max-width:180px}dialog{max-height:90vh;overflow:auto}
+dialog > .row{position:sticky;bottom:-14px;background:#182235;padding:12px 0;border-top:1px solid #475569;z-index:2}.qos-field{border:1px solid #3a4c66;border-radius:8px;padding:12px;margin:10px 0}.qos-inputs{border:0;padding:4px 0;margin:0}.qos-control>label{padding-left:12px;border-left:2px solid #3a4c66}.qos-array-row{border:1px solid #3a4c66;padding:8px;margin:6px 0}.qos-unavailable{opacity:.65}.qos-field[hidden]{display:none}.qos-control input[type=number]{width:180px}.qos-inputs:disabled{opacity:.5}
+
+.type-picker{min-width:0}.type-picker input[type=search]{width:100%;margin-left:0}.type-results{max-height:260px;overflow:auto;border:1px solid #475569;border-radius:8px;padding:5px}.type-result{display:block;width:calc(100% - 6px);text-align:left;overflow-wrap:anywhere;white-space:normal}.type-result>span,.type-result>strong{display:block;margin:3px 0}.type-result[aria-pressed=true]{border-color:#38bdf8;background:#173c56}.type-result:focus-visible{outline:2px solid #fbbf24;outline-offset:-2px}.type-match{color:#7dd3fc;font-size:12px}.type-description{white-space:pre-wrap;overflow-wrap:anywhere}.type-picker details details{margin-left:12px;border-left:1px solid #475569;padding-left:8px}#outputTypePreview{max-height:320px;overflow:auto;overflow-wrap:anywhere}
+/* Desktop workbench: library and workspace scroll independently. */
+[hidden]{display:none!important}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+:root{background:#0d1523;color:#d8e3f2}button,select,input{border-color:#35475f}button:focus-visible,summary:focus-visible{outline:2px solid #7dd3fc;outline-offset:2px}button:disabled{cursor:default}.topbar{padding:14px 24px;background:#121e30;gap:20px}.brand{display:flex;gap:12px;align-items:center}.brand h1{font-size:18px}.brand-mark{display:grid;place-items:center;background:#234d80;color:#c7eaff;border-radius:10px;width:38px;height:38px;font-size:23px;font-weight:700}.top-actions{justify-content:flex-end;gap:2px}.top-actions button{font-size:13px}.project-bar{padding:10px 24px;position:sticky;top:0;z-index:5;background:#101b2c;border-color:#24344b}.project-name{font-size:17px}#advancedTools{position:relative;margin:0 0 0 10px;padding-left:12px;border-left:1px solid #35475f}#advancedTools>summary{padding:8px 4px;color:#94a3b8;font-size:13px}.advanced-menu{position:absolute;z-index:20;right:0;top:38px;min-width:180px;padding:6px;background:#1b2a40;border:1px solid #405672;border-radius:8px;box-shadow:0 10px 30px #0008}.advanced-menu button{display:block;width:calc(100% - 6px);text-align:left;background:transparent;border:0}.project-context{display:flex;flex:1;min-width:0;align-items:center;flex-wrap:wrap;gap:10px}.project-context .project-name{overflow-wrap:anywhere}.project-context #projectStats{margin-left:4px}.project-actions{display:flex;flex-wrap:wrap;gap:6px}.project-actions button{background:transparent;font-size:13px;margin:0;padding:7px 12px}.project-actions button:hover{background:#25374e}
+main.workbench{display:grid;grid-template-columns:300px minmax(0,1fr);gap:18px;padding:18px 24px;height:calc(100dvh - 316px);min-height:420px}.panel,.app{background:#131f31;border-color:#293b53}.library-panel{display:flex;flex-direction:column;overflow:hidden;padding:0;margin:0;min-height:0}.library-header{padding:12px;border-bottom:1px solid #293b53}.library-header h2{margin:2px 0}.library-header .row{justify-content:space-between}.library-header button{font-size:12px;margin:6px 0}.library-header input,.library-header select{width:100%;margin:4px 0}#typeCount{margin-left:auto}#types{overflow:auto;overscroll-behavior:contain;min-height:0;flex:1;padding:0 8px 10px;scrollbar-gutter:stable}.library-group{font-size:12px;color:#90a9c6;margin:16px 5px 7px;font-weight:500}.library-type{display:block;text-align:left;width:calc(100% - 6px);padding:10px 9px;background:transparent;border:1px solid transparent;margin:2px 3px}.library-type strong,.library-type small{display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;line-height:1.7}.library-type strong{font-size:13px;font-weight:500}.library-type[aria-pressed=true]{background:#183957;border-color:#376582}.empty-state{padding:22px 12px;color:#90a9c6;line-height:1.8}
+.workspace{min-height:0;display:flex;flex-direction:column;min-width:0}.workspace-toolbar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding-bottom:12px}.workspace-toolbar [role=tab]{border:0;background:transparent;color:#8fa6c2;padding:10px 16px;margin:0}.workspace-toolbar [aria-selected=true]{background:#23425e;color:#d8f0ff;border-radius:7px}.workspace-toolbar #deployment{font-size:12px}#appsView,#flowView{flex:1;min-height:0;display:flex;flex-direction:column}.view-heading{padding:0 4px 12px;justify-content:space-between}.view-heading h2{margin:3px 0 5px}#apps{overflow:auto;min-height:0;padding-right:6px;overscroll-behavior:contain}.app{padding:16px;margin-bottom:12px}.app header{flex-wrap:wrap;gap:6px}.app header button{font-size:12px}.app .port{border-left-width:2px;background:#0f1929;font-size:13px}.app>.row{margin-top:12px}#connections{margin:0;min-height:0;display:flex;flex-direction:column;height:100%;padding:14px}.flow-canvas{flex:1;min-height:150px;max-height:none}.flow-detail{max-height:150px;overflow:auto}.flow-toolbar h2{margin:0}.flow-toolbar+ p{font-size:12px;margin:8px 0}.workspace-bottom{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:18px;padding:0 24px}.workspace-bottom .panel{margin:0;padding:12px 16px;min-width:0}.workspace-bottom h2{font-size:13px;margin:0 10px 0 0}.workspace-bottom details{font-size:12px}#result{max-height:240px;overflow:auto}#resultMessages{max-height:120px;overflow:auto;padding-left:22px;overflow-wrap:anywhere}#status{font-size:13px;overflow-wrap:anywhere}#instances{max-height:180px;overflow:auto}footer{font-size:12px;padding:12px 24px}.type-drawer{position:fixed;left:auto;right:0;top:0;bottom:0;margin:0;border-radius:12px 0 0 12px;width:min(640px,96vw);max-width:96vw;height:100dvh;max-height:100dvh;padding:20px;background:#152238;overflow:auto}.drawer-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;border-bottom:1px solid #35475f;padding-bottom:14px}.drawer-heading h2{overflow-wrap:anywhere;line-height:1.5;margin:5px 0}#typeDetailBody{overflow-wrap:anywhere}#typeDetailBody h3{font-size:13px;color:#a9c9e8;margin-top:22px}.type-shape details{padding:6px 0;border-bottom:1px solid #263a53}.type-shape details details{margin-left:14px}.reference-link{display:block;text-align:left;max-width:100%;overflow-wrap:anywhere;font-size:12px}.type-description{line-height:1.7}
+@media(max-width:1100px){main.workbench{grid-template-columns:260px minmax(0,1fr)}.topbar{flex-wrap:wrap}.top-actions{justify-content:flex-start}.brand-mark{display:none}}
+@media(max-width:700px){.topbar{display:block;padding:12px}.top-actions{margin-top:10px}.project-bar{padding:10px 12px}main.workbench{display:flex;flex-direction:column;height:auto;min-height:0;padding:12px}.library-panel{height:320px;flex:none}.workspace{min-height:400px}.workspace-toolbar{flex-wrap:wrap}#apps{max-height:560px}#connections{height:460px}.workspace-bottom{display:flex;flex-direction:column;padding:0 12px;gap:12px}.project-actions{width:100%}.project-context{flex-basis:100%}.brand{display:block}.app header{display:flex}footer{padding:12px}.view-heading{gap:10px}}
+.delivery-location{display:flex;align-items:center;gap:8px;padding:5px 24px;color:#94a3b8;font-size:12px;min-width:0}.delivery-location span{overflow-wrap:anywhere;min-width:0}.delivery-location button{flex:none;font-size:12px;padding:4px 8px;margin:0 0 0 auto;background:transparent}#deliveryRoot{width:100%;margin-left:0}.path-preview{overflow-wrap:anywhere;line-height:1.8}@media(max-width:700px){.delivery-location{padding:6px 12px}}
+</style>
+<header class="topbar"><div class="brand"><span class="brand-mark">A</span><div><h1>Adaptive Middleware</h1><small>应用通信配置工作台 · 0.2</small></div></div><div class="row top-actions"><button id="undo">撤销</button><button id="redo">重做</button><button id="save">保存草稿</button><button id="validate">校验</button><button class="primary" id="generate" disabled>生成 src-gen</button><button id="cancelGeneration" disabled>取消生成</button><details id="advancedTools"><summary>高级工具</summary><div class="advanced-menu"><button id="edit">编辑完整模型</button><button id="pathSettings">生成位置设置</button></div></details></div></header>
+<div class="project-bar" aria-label="当前工程"><div class="project-context"><span class="project-label">当前工程</span><strong id="projectName" class="project-name">加载中…</strong><span id="projectState"></span><span id="projectStats"></span></div><nav class="project-actions" aria-label="工程操作"><button id="newProject" title="创建空工程，沿用当前网络与策略设置">新建工程</button><button id="open" title="打开 .amw.json 工程包，包含类型、应用与部署配置">打开工程</button><button id="export" title="将当前配置下载为 .amw.json 工程包">导出工程包</button></nav></div>
+<div class="delivery-location"><span id="generationPath" aria-live="polite">正在读取生成目录…</span><button id="editGenerationPath">设置生成位置</button></div>
+<main class="workbench"><section class="panel library-panel" aria-label="类型库"><div class="library-header"><div class="row"><h2>类型库</h2><small id="typeCount"></small></div><div class="row"><button id="newType">新建消息类型</button><button id="import">导入类型 JSON</button></div><label class="sr-only" for="search">搜索类型库</label><input id="search" type="search" placeholder="搜索类型、字段或说明"><label class="sr-only" for="typeFilter">类型筛选</label><select id="typeFilter"><option value="all">全部类型</option><option value="used">已用于输出</option><option value="struct">结构体</option><option value="enum">枚举</option></select></div><div id="types" tabindex="0" aria-label="可滚动的类型列表"></div></section>
+<section class="workspace"><div class="workspace-toolbar"><div class="row" role="tablist" aria-label="工作区视图"><button id="appsTab" role="tab" aria-controls="appsView" aria-selected="true">应用配置</button><button id="flowTab" role="tab" aria-controls="flowView" aria-selected="false" tabindex="-1">数据流图</button></div><button id="deployment">QoS / 默认策略 / 网络</button></div><section id="appsView" role="tabpanel" aria-labelledby="appsTab"><div class="row view-heading"><div><h2>应用与通信关系</h2><small>定义每个 App 发布和接收的完整消息</small></div><button id="addApp" class="primary">添加 App</button></div><div id="apps"></div></section><section id="flowView" role="tabpanel" aria-labelledby="flowTab" hidden><div class="panel" id="connections"><div class="flow-toolbar"><div><h2>数据流向图</h2><small id="flowSummary"></small></div><div class="row"><button id="flowZoomOut" aria-label="缩小数据流图">−</button><span id="flowZoomLabel">100%</span><button id="flowZoomIn" aria-label="放大数据流图">+</button><button id="flowFit">适应宽度</button></div></div><p class="muted">逻辑连接：输出 → 输入 · 点击连线或编号查看消息 · 非实时通信状态</p><div id="flowCanvas" class="flow-canvas" tabindex="0" aria-label="可滚动的数据流画布"></div><div id="connectionDetail" class="flow-detail" aria-live="polite"></div></div></section></section></main>
+<div class="workspace-bottom"><section class="panel result-panel"><div class="row"><h2>操作结果</h2><span id="status" role="status">正在加载…</span></div><ul id="resultMessages" hidden></ul><details id="resultDetails"><summary>查看详细结果</summary><pre id="result"></pre></details><small id="dirty"></small></section><details class="panel deployment-summary"><summary>部署概览 <span id="instanceCount"></span></summary><p class="muted">Fast DDS · 按实例检查配置</p><div id="instances"></div></details></div>
+<footer>本地配置工具 · 应用运行不依赖本工作台</footer>
+<dialog id="typeDetailDialog" class="type-drawer" aria-labelledby="typeDetailTitle"><div class="drawer-heading"><div><small>类型详情</small><h2 id="typeDetailTitle"></h2></div><button id="closeTypeDetail" aria-label="关闭类型详情">关闭</button></div><div id="typeDetailBody"></div></dialog>
+<input type="file" id="file" accept=".json" multiple hidden><input type="file" id="projectFile" accept=".json" hidden><dialog id="dialog"><h2 id="dialogTitle"></h2><div id="dialogBody"></div><div class="row"><button id="apply" class="primary">应用</button><button id="cancel">取消</button></div></dialog>
+<script>
+const token='__TOKEN__';let model,history=[],future=[],revision=0,generationRevision=0,savedSnapshot=null,hasSaved=false;const $=id=>document.getElementById(id);const clone=x=>JSON.parse(JSON.stringify(x));
+function el(tag,text,cls){let x=document.createElement(tag);if(text!==undefined)x.textContent=text;if(cls)x.className=cls;return x}
+function change(fn){let old=clone(model);try{fn();history.push(old);if(history.length>50)history.shift();future=[];revision++;render()}catch(e){model=old;render();throw e}}
+function report(text,error=false){$('result').textContent='';$('status').textContent=text;$('status').className=error?'error':'';$('resultMessages').replaceChildren();$('resultMessages').hidden=true;if(error){const item=el('li',text);$('resultMessages').append(item);$('resultMessages').hidden=false;}}
+async function api(action,data){let r=await fetch('/api/'+action,{method:'POST',headers:{'Content-Type':'application/json','X-AMW-Token':token},body:JSON.stringify(data)});let v=await r.json();if(!r.ok)throw Error(v.error);return v}
+function modal(title,node,apply,ready=()=>true){$('dialogTitle').textContent=title;$('dialogBody').replaceChildren(node);$('apply').disabled=!ready();$('apply').onclick=async()=>{try{$('apply').disabled=true;await apply();$('dialog').close()}catch(e){alert(e.message)}finally{$('apply').disabled=!ready()}};$('dialog').showModal()}
+$('cancel').onclick=()=>$('dialog').close();
+function editJson(title,value,apply){let area=el('textarea');area.value=JSON.stringify(value,null,2);modal(title,area,async()=>apply(await api('parse',{text:area.value})))}
+function select(items){let s=el('select');for(const [value,label]of items){let o=el('option',label);o.value=value;s.append(o)}return s}
+function service(ref){return model.project.service_interfaces.find(x=>x.id===ref.ref&&x.version===ref.version)}
+function render(){
+ renderIdentity();renderTypeLibrary();
+ $('apps').replaceChildren();for(const app of model.project.apps){let card=el('div',undefined,'app'),head=el('header');head.append(el('h2',app.id));let actions=el('div'),add=el('button','增加输出'),sub=el('button','选择输入'),rename=el('button','重命名'),del=el('button','删除');actions.append(add,sub,rename,del);head.append(actions);card.append(head);
+ add.onclick=()=>addOutput(app.id);sub.onclick=()=>subscribe(app.id);rename.onclick=()=>{let n=prompt('新的 App ID（会更新连接与实例引用）',app.id);if(n&&n!==app.id)change(()=>{if(model.project.apps.some(a=>a.id===n))throw Error('App 已存在');let old=app.id;app.id=n;model.project.connections.forEach(c=>{if(c.from.app===old)c.from.app=n;if(c.to.app===old)c.to.app=n});model.deployment.instances.forEach(i=>{if(i.app===old)i.app=n})})};del.onclick=()=>{if(confirm('删除 App 及相关连接、部署实例？受影响的其他实例输入需重新绑定。'))change(()=>{model.project.apps=model.project.apps.filter(a=>a!==app);model.project.connections=model.project.connections.filter(c=>c.from.app!==app.id&&c.to.app!==app.id);model.deployment.instances=model.deployment.instances.filter(i=>i.app!==app.id)})};
+ for(const p of app.provides){const s=service(p.interface),group=el('div'),row=el('div',undefined,'row'),add=el('button','添加消息');add.onclick=()=>addOutput(app.id,p.id);row.append(el('strong','输出分组：'+p.id),add);group.append(row);for(const e of s?.events||[])group.append(el('div','输出 '+p.id+'.'+e.name+' → '+e.type.ref,'port'));card.append(group)}
+ for(const p of app.requires){const s=service(p.interface),group=el('div'),row=el('div',undefined,'row'),edit=el('button','编辑订阅');edit.setAttribute('aria-label','编辑订阅 '+p.id);edit.onclick=()=>subscribe(app.id,p.id);row.append(el('strong','输入分组：'+p.id),edit);group.append(row);for(const e of s?.events||[])if(p.events.includes(e.id))group.append(el('div','输入 '+p.id+'.'+e.name+' ← '+e.type.ref,'port input'));card.append(group)}
+ if(!app.provides.length&&!app.requires.length)card.append(el('p','尚未配置输入或输出消息','muted'));$('apps').append(card)}
+ if(!model.project.apps.length)$('apps').append(el('p','还没有 App。点击“添加 App”，开始定义输入和输出消息。','empty-state'));
+ renderConnections();$('instanceCount').textContent=model.deployment.instances.length+' 个实例';
+ $('instances').replaceChildren();for(const i of model.deployment.instances){const row=el('div',undefined,'row'),button=el('button','配置');button.onclick=()=>openQos(i.id);row.append(el('span',i.id+' · '+i.app),button);$('instances').append(row)}
+}
+// The diagram shows logical App connections, not deployment instances or live traffic.
+let selectedConnection=null,flowScale=1,flowSize=null,flowAutoFit=true;
+const connectionKey=c=>JSON.stringify([c.from.app,c.from.provided,c.to.app,c.to.required]);
+function renderIdentity(){
+ refreshGenerationPaths();
+ const name=model.project.project_id,dirty=JSON.stringify(model)!==savedSnapshot;
+ $('projectName').textContent=name;
+ $('projectState').textContent=dirty?'未保存更改':(hasSaved?'草稿已保存':'工程已载入');
+ $('projectState').className=dirty?'unsaved':'saved';
+ $('projectStats').textContent=`${model.project.apps.length} 个 App · ${model.project.connections.length} 条连接`;
+ $('dirty').textContent=dirty?'当前更改尚未保存到草稿':'可继续编辑，生成代码前请校验';
+ document.title=(dirty?'* ':'')+name+' · Adaptive Middleware';
+}
+function svgEl(tag,attributes={},text){
+ const node=document.createElementNS('http://www.w3.org/2000/svg',tag);
+ for(const [key,value] of Object.entries(attributes))node.setAttribute(key,String(value));
+ if(text!==undefined)node.textContent=text;
+ return node;
+}
+function flowZoom(scale){
+ flowScale=Math.max(.3,Math.min(2,scale));
+ const svg=$('flowCanvas').querySelector('svg');
+ if(svg&&flowSize){svg.style.width=flowSize.width*flowScale+'px';svg.style.height=flowSize.height*flowScale+'px';}
+ $('flowZoomLabel').textContent=Math.round(flowScale*100)+'%';
+}
+function fitFlow(){flowAutoFit=true;if(flowSize&&$('flowCanvas').clientWidth)flowZoom(Math.min(1,($('flowCanvas').clientWidth-20)/flowSize.width));}
+// Collapse strongly connected components before assigning columns. Cycles and
+// self-subscriptions stay in one column; isolated Apps remain visible.
+function flowRanks(apps,connections){
+ const links=new Map(apps.map(a=>[a.id,[]]));
+ for(const c of connections)if(links.has(c.from.app)&&links.has(c.to.app))links.get(c.from.app).push(c.to.app);
+ let next=0;const index=new Map(),low=new Map(),stack=[],active=new Set(),groups=[],group=new Map();
+ function visit(id){
+  index.set(id,next);low.set(id,next++);stack.push(id);active.add(id);
+  for(const to of links.get(id)){
+   if(!index.has(to)){visit(to);low.set(id,Math.min(low.get(id),low.get(to)));}
+   else if(active.has(to))low.set(id,Math.min(low.get(id),index.get(to)));
+  }
+  if(low.get(id)===index.get(id)){
+   const members=[];let node;
+   do{node=stack.pop();active.delete(node);group.set(node,groups.length);members.push(node);}while(node!==id);
+   groups.push(members);
+  }
+ }
+ for(const id of links.keys())if(!index.has(id))visit(id);
+ const edges=groups.map(()=>new Set()),indegree=groups.map(()=>0),ranks=groups.map(()=>0);
+ for(const [from,targets] of links)for(const to of targets){
+  const a=group.get(from),b=group.get(to);
+  if(a!==b&&!edges[a].has(b)){edges[a].add(b);indegree[b]++;}
+ }
+ const ready=indegree.map((n,i)=>n===0?i:-1).filter(i=>i>=0);
+ for(let i=0;i<ready.length;i++)for(const to of edges[ready[i]]){
+  ranks[to]=Math.max(ranks[to],ranks[ready[i]]+1);if(--indegree[to]===0)ready.push(to);
+ }
+ return new Map(apps.map(a=>[a.id,ranks[group.get(a.id)]]));
+}
+function selectConnection(key){const canvas=$('flowCanvas'),left=canvas.scrollLeft,top=canvas.scrollTop;selectedConnection=key;renderConnections();canvas.scrollLeft=left;canvas.scrollTop=top;}
+function renderConnections(){
+ const apps=model.project.apps,connections=model.project.connections;
+ const selected=connections.find(c=>connectionKey(c)===selectedConnection);
+ if(!selected)selectedConnection=null;
+ $('flowSummary').textContent=`${apps.length} 个 App · ${connections.length} 条连接`;
+ const detail=$('connectionDetail');detail.replaceChildren();
+ if(selected){
+  detail.append(el('strong',`${selected.from.app}.${selected.from.provided} → ${selected.to.app}.${selected.to.required}`));
+  const target=apps.find(a=>a.id===selected.to.app)?.requires.find(p=>p.id===selected.to.required);
+  const messages=target?(service(target.interface)?.events||[]).filter(e=>target.events.includes(e.id)):[];
+  detail.append(el('p',messages.length?messages.map(e=>e.name+' · '+e.type.ref+' @'+e.type.version).join('；'):'输入端口或消息定义缺失，请校验模型','muted'));
+  const remove=el('button','移除连接');remove.id='removeConnection';
+  remove.onclick=()=>change(()=>{
+   const c=model.project.connections.find(c=>connectionKey(c)===selectedConnection);
+   if(!c)return;
+   model.project.connections=model.project.connections.filter(x=>x!==c);
+   const app=model.project.apps.find(a=>a.id===c.to.app);
+   if(app)app.requires=app.requires.filter(p=>p.id!==c.to.required);
+   for(const i of model.deployment.instances)if(i.app===c.to.app){delete i.requires[c.to.required];updateInputPolicies(i,c.to.required,null,[]);}
+  });detail.append(remove);
+ }else detail.append(el('p',connections.length?'点击箭头或连接编号，查看消息和端口；也可用 Tab 选择、Enter 确认。':'先为 App 增加输出，再在接收方“选择输入”，这里会自动画出连接。','muted'));
+ const canvas=$('flowCanvas');canvas.replaceChildren();
+ if(!apps.length){canvas.append(el('p','还没有 App。点击“添加 App”开始配置。','flow-empty'));flowSize=null;return;}
+ const ranks=flowRanks(apps,connections),width=250;
+ const sameColumn=connections.filter(c=>ranks.get(c.from.app)===ranks.get(c.to.app));
+ const gap=Math.max(150,90+sameColumn.length*20);
+ const skips=connections.filter(c=>ranks.get(c.to.app)>ranks.get(c.from.app)+1);
+ const top=40+skips.length*22,columns=new Map(),positions=new Map();
+ for(const app of apps){
+  const rank=ranks.get(app.id),y=columns.get(rank)||top;
+  const height=80+Math.max(1,app.requires.length+app.provides.length)*28;
+  positions.set(app.id,{x:35+rank*(width+gap),y,height,app});columns.set(rank,y+height+45);
+ }
+ const totalWidth=Math.max(...[...positions.values()].map(p=>p.x+width))+gap;
+ const totalHeight=Math.max(...columns.values())+20;
+ flowSize={width:totalWidth,height:totalHeight};
+ const svg=svgEl('svg',{viewBox:`0 0 ${totalWidth} ${totalHeight}`,role:'group','aria-label':'App 数据流向图'});
+ const defs=svgEl('defs');
+ for(const [id,color] of [['flowArrow','#60a5fa'],['flowArrowSelected','#fbbf24']]){
+  const marker=svgEl('marker',{id,viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:8,markerHeight:8,orient:'auto',markerUnits:'userSpaceOnUse'});
+  marker.append(svgEl('path',{d:'M 0 0 L 10 5 L 0 10 z',fill:color}));defs.append(marker);
+ }svg.append(defs);
+ const paths=svgEl('g'),nodes=svgEl('g'),badges=svgEl('g');svg.append(paths,nodes,badges);
+ function portY(p,id,input){
+  const list=input?p.app.requires:p.app.provides,index=list.findIndex(port=>port.id===id);
+  return p.y+76+((input?0:p.app.requires.length)+Math.max(0,index))*28;
+ }
+ let missing=0;
+ connections.forEach((c,i)=>{
+  const from=positions.get(c.from.app),to=positions.get(c.to.app);if(!from||!to){missing++;return;}
+  const key=connectionKey(c),chosen=key===selectedConnection,x1=from.x+width,y1=portY(from,c.from.provided,false),x2=to.x,y2=portY(to,c.to.required,true);
+  let d,bx=x2-32,by=y2-12;
+  if(ranks.get(c.from.app)===ranks.get(c.to.app)){
+   const lane=from.x+width+50+sameColumn.indexOf(c)*20,above=to.y-20;
+   d=`M ${x1} ${y1} H ${lane} V ${above} H ${x2-20} V ${y2} H ${x2}`;bx=lane;by=(y1+above)/2;
+  }else if(skips.includes(c)){
+   const lane=15+skips.indexOf(c)*22;
+   d=`M ${x1} ${y1} H ${x1+25} V ${lane} H ${x2-25} V ${y2} H ${x2}`;
+  }else d=`M ${x1} ${y1} C ${x1+gap*.5} ${y1}, ${x2-gap*.5} ${y2}, ${x2} ${y2}`;
+  const description=`${c.from.app}.${c.from.provided} → ${c.to.app}.${c.to.required}`;
+  const group=svgEl('g',{class:'flow-edge'+(chosen?' selected':''),'data-from':c.from.app,'data-to':c.to.app,'data-input':c.to.required,role:'button',tabindex:0,'aria-label':description,'aria-pressed':chosen});
+  group.append(svgEl('title',description),svgEl('path',{d,class:'edge-hit'}),svgEl('path',{d,class:'edge-line','marker-end':`url(#${chosen?'flowArrowSelected':'flowArrow'})`}));
+  const activate=()=>selectConnection(key);
+  group.onclick=activate;group.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activate();$('flowCanvas').querySelector('.flow-edge.selected')?.focus({preventScroll:true});}};
+  paths.append(group);
+  const badge=svgEl('g',{class:'edge-badge'+(chosen?' selected':'')});
+  badge.append(svgEl('rect',{x:bx-14,y:by-10,width:28,height:20,rx:8}),svgEl('text',{x:bx,y:by+4,'text-anchor':'middle'},String(i+1)),svgEl('title',description));
+  badge.onclick=activate;badges.append(badge);
+ });
+ for(const [id,p] of positions){
+  const chosen=selected&&(selected.from.app===id||selected.to.app===id);
+  const node=svgEl('g',{class:'flow-node'+(chosen?' highlighted':''),'data-app':id});
+  node.append(svgEl('rect',{x:p.x,y:p.y,width,height:p.height,rx:12}),svgEl('title',id));
+  const label=(text,x,y,cls)=>{const t=svgEl('text',{x,y,class:cls},text.length>25?text.slice(0,23)+'…':text);t.append(svgEl('title',text));node.append(t);};
+  label(id,p.x+16,p.y+26,'node-title');
+  label(`${p.app.requires.length} 个输入组 · ${p.app.provides.length} 个输出组`,p.x+16,p.y+48,'node-count');
+  for(const port of p.app.requires){const y=portY(p,port.id,true);node.append(svgEl('circle',{cx:p.x,cy:y,r:4,class:'input-dot'}));label('输入  '+port.id,p.x+16,y+4,'input-label');}
+  for(const port of p.app.provides){const y=portY(p,port.id,false);node.append(svgEl('circle',{cx:p.x+width,cy:y,r:4,class:'output-dot'}));label('输出  '+port.id,p.x+16,y+4,'output-label');}
+  if(!p.app.requires.length&&!p.app.provides.length)label('尚未配置端口',p.x+16,p.y+80,'node-count');
+  nodes.append(node);
+ }
+ if(missing)detail.append(el('p',`${missing} 条连接引用了不存在的 App，无法绘制，请校验模型。`,'error'));
+ canvas.append(svg);if(flowAutoFit)fitFlow();else flowZoom(flowScale);
+}
+window.addEventListener('resize',()=>{if(flowAutoFit)fitFlow();});
+$('flowFit').onclick=fitFlow;
+$('flowZoomIn').onclick=()=>{flowAutoFit=false;flowZoom(flowScale+.15);};
+$('flowZoomOut').onclick=()=>{flowAutoFit=false;flowZoom(flowScale-.15);};
+
+// A failed change() restores a cloned model. Dialogs retain only an App ID;
+// resolve the live App on EVERY apply, including retries in the same dialog.
+function currentApp(id){
+ const app=model.project.apps.find(app=>app.id===id);
+ if(!app)throw Error('App 已不存在，请关闭窗口后重新选择');
+ return app;
+}
+function groupName(app,base){
+ base=base.replace(/_+/g,'_').replace(/_$/,'');
+ const used=new Set([...app.provides,...app.requires].map(p=>p.id));
+ let name=base,index=2;while(used.has(name))name=base+'_'+index++;
+ return name;
+}
+function formField(body,label,control,id){
+ control.id=id;const title=el('label',label);title.htmlFor=id;body.append(title,control);return control;
+}
+function advancedGroups(){
+ const details=el('details');details.append(el('summary','高级：分组设置'));return details;
+}
+function addOutput(appId,preferredGroup){
+ const app=currentApp(appId),body=el('div'),event=el('input');
+ const types=model.types.types.filter(t=>t.kind==='struct');
+ if(!types.length){alert('请先新建或导入一个结构体消息类型');return;}
+ const type=createOutputTypePicker(model.types.types,()=>{$('apply').disabled=!type.value;});
+ formField(body,'输出消息名',event,'outputMessage');event.placeholder='例如 frame';
+ body.append(type.node);
+ const advanced=advancedGroups(),groups=select([...app.provides.map(p=>[p.id,p.id]),[':new','新建输出分组…']]),name=el('input'),nameRow=el('div'),summary=el('p',undefined,'muted');
+ name.value=groupName(app,'output');
+ if(preferredGroup)groups.value=preferredGroup;
+ else if(app.provides.length>1){const option=el('option','请选择输出分组');option.value='';groups.prepend(option);groups.value='';advanced.open=true;}
+ formField(advanced,'输出分组',groups,'outputGroup');formField(nameRow,'新分组名',name,'outputGroupName');advanced.append(nameRow,el('p','通常一个分组就够用；仅在需要拆分独立服务时新建。分组不是网络端口。','muted'));
+ function showGroup(){nameRow.hidden=groups.value!==':new';summary.textContent=groups.value===':new'?'将使用输出分组：'+name.value:groups.value?'将添加到输出分组：'+groups.value:'此 App 有多个输出分组，请在高级设置中选择。';}
+ groups.onchange=showGroup;name.oninput=showGroup;showGroup();body.append(summary,advanced);
+ modal('添加完整消息输出',body,()=>{
+  const portId=(groups.value===':new'?name.value:groups.value).trim(),eventName=event.value.trim();
+  if(!portId||!eventName||!type.value)throw Error('请填写消息名、选择数据类型和输出分组');
+  if(!model.types.types.some(t=>t.kind==='struct'&&t.id+'@'+t.version===type.value))throw Error('所选类型已不存在，请重新选择');
+  change(()=>{
+   const app=currentApp(appId);
+   let p=app.provides.find(p=>p.id===portId);
+   if(groups.value===':new'&&p)throw Error('分组名已存在，请选择已有输出分组');
+   if(app.requires.some(p=>p.id===portId))throw Error('分组名已被本 App 的输入使用');
+   if(!p){
+    if(groups.value!==':new')throw Error('输出分组已不存在，请重新打开窗口');
+    const id=model.project.project_id+'.'+app.id+'.'+portId;
+    if(model.project.service_interfaces.some(s=>s.id===id))throw Error('服务接口名称已存在，请换一个分组名');
+    p={id:portId,interface:{ref:id,version:'1.0.0'}};
+    app.provides.push(p);
+    model.project.service_interfaces.push({id,version:'1.0.0',events:[]});
+    for(const i of model.deployment.instances)if(i.app===app.id)i.provides[p.id]=i.id+'_'+p.id;
+   }
+   const s=service(p.interface);
+   if(!s)throw Error('服务接口不存在，请先校验工程');
+   if(s.events.some(e=>e.name===eventName))throw Error('消息名已存在');
+   const [ref,version]=type.value.split('@');
+   s.events.push({id:Math.max(0,...s.events.map(e=>e.id))+1,name:eventName,type:{ref,version}});
+  });
+ },()=>!!type.value);
+}
+// Keep per-instance policies for retained messages, including when renaming a
+// local input. Deselected messages must not leave invalid endpoint overrides.
+function updateInputPolicies(instance,oldId,newId,eventNames){
+ const policies=instance.event_policies;if(!policies)return;
+ for(const key of Object.keys(policies))if(key.startsWith(oldId+'.')){
+  const event=key.slice(oldId.length+1),value=policies[key];delete policies[key];
+  if(newId&&eventNames.includes(event))policies[newId+'.'+event]=value;
+ }
+ if(!Object.keys(policies).length)delete instance.event_policies;
+}
+function subscribe(appId,editingId){
+ const app=currentApp(appId),existing=app.requires.find(p=>p.id===editingId);
+ const connection=existing&&model.project.connections.find(c=>c.to.app===appId&&c.to.required===editingId);
+ if(editingId&&!connection){alert('此输入缺少逻辑来源，请先校验工程并修复连接');return;}
+ const options=[];
+ for(const a of model.project.apps)for(const p of a.provides)options.push([a.id+'|'+p.id,a.id+' / '+p.id]);
+ if(!options.length){alert('请先配置输出');return;}
+ const body=el('div'),source=select(options),id=el('input'),events=el('div'),advanced=advancedGroups(),summary=el('p',undefined,'muted');
+ if(existing){source.value=connection.from.app+'|'+connection.from.provided;source.disabled=true;id.value=editingId;}
+ // Once the user edits the suggested name, changing source must not overwrite it.
+ let customName=!!existing;id.oninput=()=>{customName=true;summary.textContent='输入分组：'+id.value;};
+ function show(){
+  const [a,p]=source.value.split('|'),port=currentApp(a).provides.find(x=>x.id===p);
+  if(!customName)id.value=groupName(currentApp(appId),a+'_'+p);
+  summary.textContent='输入分组：'+id.value;
+  events.replaceChildren();
+  for(const e of service(port.interface).events){
+   const l=el('label'),b=el('input');b.type='checkbox';b.value=e.id;b.checked=existing?existing.events.includes(e.id):true;
+   l.append(b,el('span',e.name+' · '+e.type.ref));events.append(l);
+  }
+ }
+ source.onchange=show;show();formField(body,'消息来源（App / 输出分组）',source,'inputSource');
+ body.append(el('p','勾选要接收的完整消息；同一输入分组可以接收多条消息。','muted'),events,summary);
+ formField(advanced,'输入分组名',id,'inputGroupName');advanced.append(el('p','已自动命名，可按需修改。同一 App 内输入、输出分组不能重名；名称会用于生成接口。','muted'));body.append(advanced);
+ if(existing)body.append(el('p','在此修改订阅消息，保留各部署实例原有来源。需要另一来源时，请新增输入分组。取消全部订阅请在数据流向图中移除连接。','muted'));
+ modal(existing?'编辑订阅消息':'选择完整消息输入',body,()=>{
+  const ids=[...events.querySelectorAll('input:checked')].map(x=>Number(x.value)),inputId=id.value.trim();
+  if(!inputId||!ids.length)throw Error('请填写输入分组名，并至少选择一条消息');
+  change(()=>{
+   const app=currentApp(appId);
+   if([...app.requires.filter(p=>p.id!==editingId),...app.provides].some(p=>p.id===inputId))throw Error('分组名已存在，请换一个名称；修改已有输入请使用“编辑订阅”');
+   const [a,p]=source.value.split('|'),provided=currentApp(a).provides.find(x=>x.id===p);
+   const eventNames=service(provided.interface).events.filter(e=>ids.includes(e.id)).map(e=>e.name);
+   if(editingId){
+    const input=app.requires.find(p=>p.id===editingId);
+    if(!input)throw Error('输入分组已不存在，请重新打开窗口');
+    input.id=inputId;input.events=ids;
+    for(const c of model.project.connections)if(c.to.app===appId&&c.to.required===editingId)c.to.required=inputId;
+    for(const i of model.deployment.instances)if(i.app===appId){
+     const binding=i.requires[editingId];delete i.requires[editingId];if(binding)i.requires[inputId]=binding;
+     updateInputPolicies(i,editingId,inputId,eventNames);
+    }
+   }else{
+    app.requires.push({id:inputId,interface:clone(provided.interface),events:ids});
+    model.project.connections.push({from:{app:a,provided:p},to:{app:app.id,required:inputId}});
+    const si=model.deployment.instances.find(i=>i.app===a);
+    if(si)for(const i of model.deployment.instances)if(i.app===app.id)i.requires[inputId]={instance:si.id,provided:p};
+   }
+  });
+ });
+}
+$('newProject').onclick=()=>{let id=prompt('新工程 ID');if(id)change(()=>{model={types:{format_version:1,types:[]},project:{format_version:1,project_id:id,service_interfaces:[],apps:[],connections:[]},deployment:{format_version:1,binding:'fastdds',transport:clone(model.deployment.transport),policies:clone(model.deployment.policies),instances:[]}}})};
+$('addApp').onclick=()=>{let id=prompt('App ID');if(id)change(()=>{if(model.project.apps.some(a=>a.id===id))throw Error('App 已存在');model.project.apps.push({id,provides:[],requires:[]});model.deployment.instances.push({id:id+'_instance',app:id,provides:{},requires:{},policy:Object.keys(model.deployment.policies)[0]})})};
+$('search').oninput=()=>renderTypeLibrary();$('edit').onclick=()=>editJson('编辑完整工程模型（未支持的字段会在校验时提示）',model,m=>change(()=>model=m));$('deployment').onclick=()=>editJson('部署：实例绑定、策略与网络配置',model.deployment,d=>change(()=>model.deployment=d));
+$('undo').onclick=()=>{if(history.length){future.push(clone(model));model=history.pop();revision++;render()}};$('redo').onclick=()=>{if(future.length){history.push(clone(model));model=future.pop();revision++;render()}};
+$('import').onclick=()=>$('file').click();$('file').onchange=async e=>{try{let imported=[];for(const f of e.target.files){let t=await api('parse',{text:await f.text()});if(t.format_version!==1||!Array.isArray(t.types))throw Error('需要 format_version=1 的类型库');imported.push(...t.types)}editJson('导入预览：同 ID / 版本将替换，校验可定位受影响接口',imported,items=>change(()=>{for(const t of items){let i=model.types.types.findIndex(x=>x.id===t.id&&x.version===t.version);if(i>=0)model.types.types[i]=t;else model.types.types.push(t)}}))}catch(e){report(e.message,true)}e.target.value=''};
+$('open').onclick=()=>$('projectFile').click();$('projectFile').onchange=async e=>{try{let m=await api('parse',{text:await e.target.files[0].text()});await api('validate',m);change(()=>model=m)}catch(e){report(e.message,true)}};
+$('export').onclick=()=>{let a=document.createElement('a'),url=URL.createObjectURL(new Blob([JSON.stringify(model,null,2)],{type:'application/json'}));a.href=url;a.download=model.project.project_id+'.amw.json';a.click();URL.revokeObjectURL(url)};
+for(const action of ['save','validate'])$(action).onclick=async()=>{try{const submitted=clone(model);$(action).disabled=true;report(action==='save'?'正在保存草稿…':'正在校验…');let v=await api(action,submitted);if(action==='save'){savedSnapshot=JSON.stringify(submitted);hasSaved=true;renderIdentity();}report(action==='save'?'草稿已保存':'校验通过');showResult(v)}catch(e){report(e.message,true)}finally{$(action).disabled=false}};
+$('generate').onclick=async()=>{if(generationBusy)return;generationBusy=true;$('generate').disabled=true;try{const submitted=clone(model),submittedRevision=revision,submittedRoot=deliveryRoot;await api('generate',{bundle:submitted,delivery_root:submittedRoot});generationRevision=submittedRevision;$('cancelGeneration').disabled=false;report('正在生成，编辑界面仍可使用');let timer=setInterval(async()=>{try{let job=await(await fetch('/api/job')).json();if(job.status!=='running'){clearInterval(timer);generationBusy=false;refreshGenerationPaths();$('cancelGeneration').disabled=true;report(job.status==='done'?'生成完成：请交付 '+job.output+(revision!==generationRevision||deliveryRoot!==submittedRoot?'；模型或生成位置已修改，请重新生成':''):'生成失败',job.status!=='done');showResult(job)}}catch(e){clearInterval(timer);generationBusy=false;refreshGenerationPaths();$('cancelGeneration').disabled=true;report(e.message,true)}},500)}catch(e){generationBusy=false;refreshGenerationPaths();report(e.message,true)}};
+$('cancelGeneration').onclick=()=>api('cancel',{}).then(()=>report('已请求取消，等待生成器退出')).catch(e=>report(e.message,true));
+window.addEventListener('DOMContentLoaded',()=>Promise.all([fetch('/api/model').then(r=>r.json()),fetch('/api/editor-config').then(r=>r.json())]).then(([m,config])=>{initializePaths(config);model=m;savedSnapshot=JSON.stringify(m);render();report('就绪：Fast DDS 发布订阅')}).catch(e=>report(e.message,true)));
+</script><script src="/type-picker.js"></script><script src="/workspace.js"></script><script src="/paths.js"></script><script src="/types.js"></script><script src="/qos.js"></script></html>

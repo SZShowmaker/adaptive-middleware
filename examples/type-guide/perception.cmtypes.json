@@ -1,0 +1,80 @@
+{
+  "format_version": 1,
+  "types": [
+    {
+      "id": "perception.Category",
+      "version": "1.0.0",
+      "kind": "enum",
+      "description": "目标类别",
+      "enumerators": [
+        "Unknown",
+        "Vehicle",
+        "Pedestrian"
+      ]
+    },
+    {
+      "id": "perception.Object",
+      "version": "1.0.0",
+      "kind": "struct",
+      "fields": [
+        {
+          "id": 1,
+          "name": "object_id",
+          "type": "uint32"
+        },
+        {
+          "id": 2,
+          "name": "position",
+          "type": {
+            "kind": "array",
+            "element": "float32",
+            "length": 3
+          },
+          "unit": "m",
+          "description": "车体坐标系 x、y、z；x 向前，y 向左，z 向上"
+        },
+        {
+          "id": 3,
+          "name": "category",
+          "type": {
+            "ref": "perception.Category",
+            "version": "1.0.0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "perception.Frame",
+      "version": "1.0.0",
+      "kind": "struct",
+      "description": "单帧感知结果",
+      "fields": [
+        {
+          "id": 1,
+          "name": "frame_id",
+          "type": "uint64"
+        },
+        {
+          "id": 2,
+          "name": "sensor_name",
+          "type": {
+            "kind": "string",
+            "max_length": 32
+          }
+        },
+        {
+          "id": 3,
+          "name": "objects",
+          "type": {
+            "kind": "sequence",
+            "element": {
+              "ref": "perception.Object",
+              "version": "1.0.0"
+            },
+            "max_length": 128
+          }
+        }
+      ]
+    }
+  ]
+}

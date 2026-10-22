@@ -1,0 +1,26 @@
+{
+  "generator_jar": "/path/to/fastddsgen.jar",
+  "java": "java",
+  "delivery_sdks": {
+    "linux-x64": {
+      "sdk_prefix": "/path/to/sdk/linux-x64",
+      "compiler_id": "GNU",
+      "compiler_major": 11,
+      "extra_files": {
+        "lib/libssl.so.3": "/path/to/openssl/libssl.so.3",
+        "lib/libcrypto.so.3": "/path/to/openssl/libcrypto.so.3",
+        "share/openssl/LICENSE": "/path/to/openssl/LICENSE"
+      }
+    },
+    "linux-arm64": {
+      "sdk_prefix": "/path/to/sdk/linux-arm64",
+      "compiler_id": "GNU",
+      "compiler_major": 9
+    },
+    "windows-x64": {
+      "sdk_prefix": "/path/to/sdk/windows-x64",
+      "compiler_id": "MSVC",
+      "compiler_major": 19
+    }
+  }
+}

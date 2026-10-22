@@ -1,0 +1,70 @@
+{
+  "format_version": 1,
+  "types": [
+    {
+      "id": "demo.Object",
+      "version": "1.0.0",
+      "kind": "struct",
+      "fields": [
+        {
+          "id": 1,
+          "name": "object_id",
+          "type": "uint32"
+        },
+        {
+          "id": 2,
+          "name": "distance",
+          "type": "float32",
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "id": "demo.Frame",
+      "version": "1.0.0",
+      "kind": "struct",
+      "fields": [
+        {
+          "id": 1,
+          "name": "frame_id",
+          "type": "uint64"
+        },
+        {
+          "id": 2,
+          "name": "speed",
+          "type": "float32",
+          "unit": "m/s"
+        },
+        {
+          "id": 3,
+          "name": "objects",
+          "type": {
+            "kind": "sequence",
+            "element": {
+              "ref": "demo.Object",
+              "version": "1.0.0"
+            },
+            "max_length": 128
+          }
+        }
+      ]
+    },
+    {
+      "id": "demo.Health",
+      "version": "1.0.0",
+      "kind": "struct",
+      "fields": [
+        {
+          "id": 1,
+          "name": "healthy",
+          "type": "bool"
+        },
+        {
+          "id": 2,
+          "name": "code",
+          "type": "uint32"
+        }
+      ]
+    }
+  ]
+}

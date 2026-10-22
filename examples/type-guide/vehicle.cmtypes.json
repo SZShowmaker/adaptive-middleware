@@ -1,0 +1,62 @@
+{
+  "format_version": 1,
+  "types": [
+    {
+      "id": "vehicle.VehicleState",
+      "version": "1.0.0",
+      "kind": "struct",
+      "description": "车辆当前状态",
+      "fields": [
+        {
+          "id": 1,
+          "name": "speed",
+          "type": "float32",
+          "unit": "m/s",
+          "description": "车辆行驶速度"
+        },
+        {
+          "id": 2,
+          "name": "brake_active",
+          "type": "bool",
+          "description": "true 表示制动已激活"
+        },
+        {
+          "id": 3,
+          "name": "sensor_name",
+          "type": {
+            "kind": "string",
+            "max_length": 32
+          }
+        },
+        {
+          "id": 4,
+          "name": "position",
+          "type": {
+            "kind": "array",
+            "element": "float32",
+            "length": 3
+          },
+          "unit": "m",
+          "description": "依次为 x、y、z；坐标系由业务协议约定"
+        },
+        {
+          "id": 5,
+          "name": "measurements",
+          "type": {
+            "kind": "sequence",
+            "element": "float32",
+            "max_length": 16
+          }
+        },
+        {
+          "id": 6,
+          "name": "nearest_object",
+          "type": {
+            "ref": "perception.Object",
+            "version": "1.0.0"
+          }
+        }
+      ]
+    }
+  ]
+}

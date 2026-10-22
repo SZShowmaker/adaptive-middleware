@@ -1,0 +1,55 @@
+digraph Components {
+  graph [newrank=true, rankdir=TB, bgcolor="#F8FAFC", pad=0.35, nodesep=0.45, ranksep=0.5,
+         fontname="Noto Sans CJK SC", fontsize=22, fontcolor="#0F172A",
+         label="模块与组件：开发时如何依赖，运行时如何通信\n", labelloc=t, splines=polyline, compound=true];
+  node [shape=box, style="rounded,filled", fillcolor="white", color="#CBD5E1",
+        fontname="Noto Sans CJK SC", fontsize=12, fontcolor="#0F172A", margin="0.20,0.14", penwidth=1.2];
+  edge [color="#64748B", penwidth=1.4, arrowsize=0.75,
+        fontname="Noto Sans CJK SC", fontsize=10, fontcolor="#475569"];
+
+  subgraph cluster_dev {
+    label="开发环境  ·  两个独立仓库，统一打包为 src-gen"; fontsize=15; color="#CBD5E1"; style="rounded,filled"; fillcolor="#F1F5F9";
+    kit [label="fastdds-build-kit\n维护第三方源码、版本、工具链\n产出 Gen 与各目标平台 SDK", fillcolor="#FEF3C7", color="#FBBF24"];
+    amw [label="adaptive-middleware\n维护 JSON / GUI / 生成器\nCM / 日志 / 时间与 Fast DDS 绑定", fillcolor="#CCFBF1", color="#14B8A6"];
+    {rank=same; kit; amw;}
+    kit -> amw [label="Gen 用于生成\n三平台 SDK 随包交付"];
+  }
+
+  subgraph cluster_process {
+    label="进程 A  ·  以下组件链接进业务程序"; fontsize=15; color="#A5B4FC"; style="rounded,filled"; fillcolor="#EEF2FF";
+    app [label="业务 App\n算法 / 业务逻辑", fillcolor="#DBEAFE", color="#60A5FA"];
+    generated [label="生成的类型与 App 接口\nDTO、发布函数、接收回调、配置\namw_generated", fillcolor="#CCFBF1", color="#14B8A6"];
+    cm [label="公共通信模块 CM  ·  amw_cm\n有界队列、工作线程、启停、错误、统计\n公共 API：amw::cm", fillcolor="#C7D2FE", color="#818CF8"];
+    boundary [label="NetworkBinding / Writer / Reader\n协议实现边界", fillcolor="#312E81", color="#312E81", fontcolor="white"];
+    binding [label="Fast DDS 绑定  ·  amw_fastdds\n管理 Participant、Writer、Reader\n接入类型支持和发现 / 匹配", fillcolor="#CCFBF1", color="#14B8A6"];
+    libraries [label="第三方运行库\nFast DDS 3.6.2.0 + Fast CDR 2.3.6", fillcolor="#FEF3C7", color="#FBBF24"];
+    log [label="公共日志 / 时间  ·  amw_log / amw_time\nXML 启动加载、模块等级、终端输出\n时间戳、单调计时  ·  不依赖 DDS", fillcolor="#CCFBF1", color="#14B8A6"];
+    app -> log [label="记录日志 / 计时"];
+    cm -> log [label="关键诊断"];
+    app -> generated [label="发布 / 订阅完整消息", dir=both];
+    generated -> cm [dir=both];
+    cm -> boundary [dir=both];
+    boundary -> binding [dir=both];
+    binding -> libraries [dir=both];
+  }
+
+  subgraph cluster_future {
+    label="扩展位置  ·  虚线框均未实现"; fontsize=15; style="rounded,dashed"; color="#94A3B8";
+    modules [label="SM / EM 等平台模块\n通过公共接口使用 CM", style="rounded,dashed,filled", fillcolor="#F1F5F9", color="#94A3B8", fontcolor="#64748B"];
+    someip [label="vsomeip 绑定\n与 Fast DDS 绑定并列\n还需编码、发现和工具支持", style="rounded,dashed,filled", fillcolor="#F1F5F9", color="#94A3B8", fontcolor="#64748B"];
+    modules -> someip [style=invis];
+  }
+  {rank=same; generated; modules;}
+  {rank=same; cm; log;}
+  {rank=same; binding; someip;}
+  modules -> cm [style=dashed, color="#94A3B8", constraint=false, label="规划使用"];
+  boundary -> someip [style=dashed, color="#94A3B8", label="规划实现", constraint=false];
+
+  amw -> app [style=dotted, color="#14B8A6", label="交付单个 src-gen\n接口 + 公共源码 + 平台 SDK", lhead=cluster_process];
+  transport [label="通信通道\n跨设备：以太网 UDP / RTPS\n同机：UDP 或普通共享内存传输（取决于配置与环境）", fillcolor="#E0E7FF", color="#818CF8"];
+  peer [label="进程 B  ·  同一 SoC 或另一台设备\n对应的 DDS 端点 → CM → 生成接口 → 业务回调\n配置与消息契约必须匹配", fillcolor="#DBEAFE", color="#60A5FA"];
+  libraries -> transport -> peer [dir=both];
+  note [shape=plaintext, fontsize=11, fontcolor="#475569",
+        label="实线：当前通信调用 / 数据路径（开发区箭头表示依赖提供）   ·   虚线：规划中的扩展\nCM 是共用运行库，不是单独的转发进程；DTO 与 DDS 类型转换当前有复制。\n普通共享内存传输不等于零拷贝；实际使用的传输需在部署环境验证。\n职责参考 AUTOSAR AP；当前不是 ara::com 源码兼容实现。"];
+  peer -> note [style=invis];
+}

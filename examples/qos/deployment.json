@@ -1,0 +1,140 @@
+{
+  "format_version": 1,
+  "binding": "fastdds",
+  "transport": {
+    "domain": 147,
+    "shared_memory": false,
+    "interface_address": "",
+    "peers": []
+  },
+  "policies": {
+    "state": {
+      "queue_samples": 16,
+      "queue_bytes": 4194304,
+      "overflow": "discard_oldest",
+      "reliability": "best_effort",
+      "durability": "volatile",
+      "history_depth": 16,
+      "max_blocking_ms": 20,
+      "dds": {
+        "topic": {
+          "reliability.kind": "reliable",
+          "durability.kind": "transient_local",
+          "history.depth": 3
+        },
+        "writer": {
+          "publish_mode.kind": "asynchronous",
+          "publish_mode.flow_controller": "limited",
+          "user_data.hex": "414d57",
+          "properties": [
+            {
+              "name": "application.team",
+              "value": "QoS demo",
+              "propagate": true
+            }
+          ]
+        }
+      }
+    },
+    "async_default": {
+      "dds": {
+        "topic": {
+          "reliability.kind": "reliable",
+          "durability.kind": "transient_local",
+          "history.depth": 3
+        },
+        "writer": {
+          "publish_mode.kind": "asynchronous"
+        }
+      }
+    }
+  },
+  "instances": [
+    {
+      "id": "camera_front",
+      "app": "producer",
+      "provides": {
+        "perception": "front"
+      },
+      "requires": {},
+      "policy": "state",
+      "event_policies": {
+        "perception.health": "async_default"
+      }
+    },
+    {
+      "id": "camera_rear",
+      "app": "producer",
+      "provides": {
+        "perception": "rear"
+      },
+      "requires": {},
+      "policy": "state"
+    },
+    {
+      "id": "monitor",
+      "app": "consumer",
+      "provides": {},
+      "requires": {
+        "perception": {
+          "instance": "camera_front",
+          "provided": "perception"
+        }
+      },
+      "policy": "state"
+    },
+    {
+      "id": "recorder",
+      "app": "consumer",
+      "provides": {},
+      "requires": {
+        "perception": {
+          "instance": "camera_front",
+          "provided": "perception"
+        }
+      },
+      "policy": "state"
+    },
+    {
+      "id": "rear_monitor",
+      "app": "consumer",
+      "provides": {},
+      "requires": {
+        "perception": {
+          "instance": "camera_rear",
+          "provided": "perception"
+        }
+      },
+      "policy": "state"
+    }
+  ],
+  "qos": {
+    "participant": {
+      "flow_controllers": [
+        {
+          "name": "limited",
+          "scheduler": "fifo",
+          "max_bytes_per_period": 1048576,
+          "period_ms": 10,
+          "sender_thread": {
+            "scheduling_policy": -1,
+            "priority": -2147483648,
+            "affinity": "0",
+            "stack_size": -1
+          }
+        }
+      ]
+    },
+    "publisher": {
+      "partition.names": [
+        "qos_demo"
+      ],
+      "group_data.hex": "0102"
+    },
+    "subscriber": {
+      "partition.names": [
+        "qos_demo"
+      ]
+    }
+  }
+}

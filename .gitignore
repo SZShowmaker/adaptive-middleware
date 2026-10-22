@@ -1,0 +1,68 @@
+# Generated packages, drafts, build outputs and validation evidence.
+/out/
+/build/
+/cmake-build-*/
+src-gen/
+src-gen.lock
+src-gen.previous/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CTestTestfile.cmake
+Testing/
+compile_commands.json
+
+# Personal business projects, experiments and downloaded dependencies.
+# Keep shared examples and regression fixtures under examples/ and tests/.
+/local/
+/.deps/
+/.cache/
+/config.local.json
+/config.*.local.json
+/CMakeUserPresets.json
+/*.amw.json
+/.env
+/.env.*
+!/.env.example
+
+# Python environments and test/tool caches.
+/.venv/
+/.venv-*/
+/venv/
+/.tools-venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Editor and OS preferences; shared formatting stays versioned.
+.vscode/
+.idea/
+.vs/
+*.user
+*.suo
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Compiled and diagnostic artifacts. Do not ignore source JSON or tests.
+*.o
+*.obj
+*.a
+*.so
+*.so.*
+*.dll
+*.lib
+*.exe
+*.pdb
+*.gcda
+*.gcno
+*.log
+*.pcap
+*.pcapng

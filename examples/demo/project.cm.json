@@ -1,0 +1,79 @@
+{
+  "format_version": 1,
+  "type_files": [
+    "types/messages.cmtypes.json"
+  ],
+  "deployment_file": "deployment.json",
+  "model": {
+    "format_version": 1,
+    "project_id": "demo",
+    "service_interfaces": [
+      {
+        "id": "demo.Perception",
+        "version": "1.0.0",
+        "events": [
+          {
+            "id": 1,
+            "name": "frame",
+            "type": {
+              "ref": "demo.Frame",
+              "version": "1.0.0"
+            }
+          },
+          {
+            "id": 2,
+            "name": "health",
+            "type": {
+              "ref": "demo.Health",
+              "version": "1.0.0"
+            }
+          }
+        ]
+      }
+    ],
+    "apps": [
+      {
+        "id": "producer",
+        "provides": [
+          {
+            "id": "perception",
+            "interface": {
+              "ref": "demo.Perception",
+              "version": "1.0.0"
+            }
+          }
+        ],
+        "requires": []
+      },
+      {
+        "id": "consumer",
+        "provides": [],
+        "requires": [
+          {
+            "id": "perception",
+            "interface": {
+              "ref": "demo.Perception",
+              "version": "1.0.0"
+            },
+            "events": [
+              1,
+              2
+            ]
+          }
+        ]
+      }
+    ],
+    "connections": [
+      {
+        "from": {
+          "app": "producer",
+          "provided": "perception"
+        },
+        "to": {
+          "app": "consumer",
+          "required": "perception"
+        }
+      }
+    ]
+  }
+}

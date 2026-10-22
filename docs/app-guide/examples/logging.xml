@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<logging version="1">
+    <defaultLevel>INFO</defaultLevel>
+    <timestamp timezone="local" precision="milliseconds"/>
+    <console enabled="true" color="auto"/>
+    <queue capacity="1024" maxMessageBytes="4096"/>
+    <modules>
+        <module name="cm" level="DEBUG"/>
+        <module name="perception" level="INFO"/>
+    </modules>
+</logging>
